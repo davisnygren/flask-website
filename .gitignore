@@ -1,1 +1,2 @@
-microblog/venv
+microblog/venv/
+microblog/app/__pycache__/
