@@ -2,5 +2,9 @@ Python Flask Website following https://blog.miguelgrinberg.com/post/the-flask-me
 Uses:
     - Python 3
     - Flask
+	  - Flask-SQLAlchemy
+	  - Flask-Migrate
     - Jinja
     - WTForms
+	- SQLAlchemy
+	- Alembic
