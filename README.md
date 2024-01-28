@@ -4,6 +4,7 @@ Uses:
     - Flask
 	  - Flask-SQLAlchemy
 	  - Flask-Migrate
+	  - Flask-Login
     - Jinja
     - WTForms
 	- SQLAlchemy
