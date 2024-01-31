@@ -5,6 +5,15 @@ from app import app, db
 from app.forms import LoginForm, RegistrationForm
 from app.models import User
 from urllib.parse import urlsplit
+from datetime import datetime, timezone
+
+# This is executed before the view function. Update last login time for user.
+# Note: no db.session.add() needed since current_user will invoke a query.
+@app.before_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.last_seen = datetime.now(timezone.utc)
+        db.session.commit()
 
 # Display the index of blog posts, but require login first.
 @app.route('/')
