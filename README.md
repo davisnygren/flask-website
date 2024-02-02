@@ -13,6 +13,7 @@ Uses:
 	- Alembic
 	
 - Use "flask run" to start the server on http://localhost:5000.
+- Use 'python tests.py' to run the unit tests.
 - Use "venv\scripts\activate" to activate virtual Python environment.
 - Set "FLASK_DEBUG" variable to 1 before running to enable debugging mode.
 - To enable local email server for errors:
