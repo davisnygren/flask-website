@@ -30,17 +30,9 @@ def index():
         flash('Your post is now live!')
         # Redirect to prevent a refresh from resubmitting the form
         return redirect(url_for('index'))
-    posts = [
-        {
-            'author': {'username': 'John'},
-            'body': 'Beautiful day in Portland!'
-        },
-        {
-            'author': {'username': 'Susan'},
-            'body': 'The Avengers movie was so cool!'
-        }
-    ]
-    return render_template('index.html', title ='Home', posts=posts, form=form)
+    posts = db.session.scalars(current_user.following_posts()).all()
+    return render_template("index.html", title='Home Page', form=form,
+                           posts=posts)
     
 # Display the login page. Display the index if the user is already logged in.
 # Log in the user and redirect if the form is submitted.
@@ -159,3 +151,11 @@ def unfollow(username):
         return redirect(url_for('user', username=username))
     else:
         return redirect(url_for('index'))
+        
+# Show global post stream from all users
+@app.route('/explore')
+@login_required
+def explore():
+    query = sa.select(Post).order_by(Post.timestamp.desc())
+    posts = db.session.scalars(query).all()
+    return render_template('index.html', title='Explore', posts=posts)
