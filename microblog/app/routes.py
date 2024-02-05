@@ -2,8 +2,9 @@ from flask import render_template, flash, redirect, request, url_for
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, EmptyForm
-from app.models import User
+from app.forms import (LoginForm, RegistrationForm, EditProfileForm, EmptyForm,
+    PostForm)
+from app.models import User, Post
 from urllib.parse import urlsplit
 from datetime import datetime, timezone
 
@@ -16,10 +17,19 @@ def before_request():
         db.session.commit()
 
 # Display the index of blog posts, but require login first.
-@app.route('/')
-@app.route('/index')
+# Includes form for adding new posts.
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(body=form.post.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        flash('Your post is now live!')
+        # Redirect to prevent a refresh from resubmitting the form
+        return redirect(url_for('index'))
     posts = [
         {
             'author': {'username': 'John'},
@@ -30,7 +40,7 @@ def index():
             'body': 'The Avengers movie was so cool!'
         }
     ]
-    return render_template('index.html', title ='Home', posts=posts)
+    return render_template('index.html', title ='Home', posts=posts, form=form)
     
 # Display the login page. Display the index if the user is already logged in.
 # Log in the user and redirect if the form is submitted.
