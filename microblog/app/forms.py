@@ -49,3 +49,8 @@ class EditProfileForm(FlaskForm):
                 User.username == self.username.data))
             if user is not None:
                 raise ValidationError('Please use a different username.')
+                
+# Empty form used for follow and unfollow. Only CSRF token from Flask-WTF is 
+# needed.
+class EmptyForm(FlaskForm):
+    submit = SubmitField('Submit')
