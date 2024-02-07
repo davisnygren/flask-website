@@ -13,6 +13,7 @@ Uses:
     - WTForms
 	- SQLAlchemy
 	- Alembic
+	- Bootstrap
 	
 - Use "flask run" to start the server on http://localhost:5000.
 - Use 'python tests.py' to run the unit tests.
