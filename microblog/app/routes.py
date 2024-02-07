@@ -1,9 +1,12 @@
+# Contains the routes to the various site pages
+
 from flask import render_template, flash, redirect, request, url_for
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
 from app import app, db
+from app.email import send_password_reset_email
 from app.forms import (LoginForm, RegistrationForm, EditProfileForm, EmptyForm,
-    PostForm)
+    PostForm, ResetPasswordRequestForm, ResetPasswordForm)
 from app.models import User, Post
 from urllib.parse import urlsplit
 from datetime import datetime, timezone
@@ -182,3 +185,37 @@ def unfollow(username):
         return redirect(url_for('user', username=username))
     else:
         return redirect(url_for('index'))
+
+# Form to reset a user's password 
+@app.route('/reset_password_request', methods=['GET', 'POST'])
+def reset_password_request():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = ResetPasswordRequestForm()
+    if form.validate_on_submit():
+        user = db.session.scalar(
+            sa.select(User).where(User.email == form.email.data))
+        if user:
+            send_password_reset_email(user)
+        flash('Check your email for the instructions to reset your password')
+        return redirect(url_for('login'))
+    return render_template('reset_password_request.html',
+                           title='Reset Password', form=form)
+                           
+# Password reset view function (linked from reset request email)
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    # we don't need to reset if the user is logged in already
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    user = User.verify_reset_password_token(token)
+    # return to the homepage if not a valid user
+    if not user:
+        return redirect(url_for('index'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        user.set_password(form.password.data)
+        db.session.commit()
+        flash('Your password has been reset.')
+        return redirect(url_for('login'))
+    return render_template('reset_password.html', form=form)

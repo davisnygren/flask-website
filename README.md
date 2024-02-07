@@ -3,10 +3,12 @@ Python Flask Website following https://blog.miguelgrinberg.com/post/the-flask-me
 Uses:
     - Python 3
 	  - aiosmtpd
+	  - pyjwt
     - Flask
 	  - Flask-SQLAlchemy
 	  - Flask-Migrate
 	  - Flask-Login
+	  - Flask-Mail
     - Jinja
     - WTForms
 	- SQLAlchemy
@@ -18,4 +20,8 @@ Uses:
 - Set "FLASK_DEBUG" variable to 1 before running to enable debugging mode.
 - To enable local email server for errors:
 	- pip install aiosmtpd
-	- aiosmtpd -n -c aiosmtpd.handlers.Debugging -l localhost:8025
+	- (in second terminal)
+		- aiosmtpd -n -c aiosmtpd.handlers.Debugging -l localhost:8025
+	- (in original terminal) 
+		- set MAIL_SERVER=localhost
+		- set MAIL_PORT=8025
