@@ -19,6 +19,9 @@ login.login_view = 'login'
 mail = Mail(app)
 
 # Import flask blueprints for submodules
+from app.auth import bp as auth_bp
+app.register_blueprint(auth_bp, url_prefix='/auth')
+
 from app.errors import bp as errors_bp
 app.register_blueprint(errors_bp)
 

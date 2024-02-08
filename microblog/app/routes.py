@@ -1,11 +1,11 @@
-# Contains the routes to the various site pages
+# Contains the routes to general site pages
 
 from flask import render_template, flash, redirect, request, url_for
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
 from app import app, db
 from app.email import send_password_reset_email
-from app.forms import (LoginForm, RegistrationForm, EditProfileForm, EmptyForm,
+from app.forms import (RegistrationForm, EditProfileForm, EmptyForm,
     PostForm, ResetPasswordRequestForm, ResetPasswordForm)
 from app.models import User, Post
 from urllib.parse import urlsplit
@@ -61,29 +61,6 @@ def explore():
         if posts.has_prev else None
     return render_template('index.html', title='Explore', posts=posts.items,
                            next_url=next_url, prev_url=prev_url)
-  
-# Display the login page. Display the index if the user is already logged in.
-# Log in the user and redirect if the form is submitted.
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = db.session.scalar(
-            sa.select(User).where(User.username == form.username.data))
-
-        if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
-            return redirect(url_for('login'))
-        login_user(user, remember=form.remember_me.data)
-        next_page = request.args.get('next')
-        
-        # prevent redirects outside of application
-        if not next_page or urlsplit(next_page).netloc != '':
-            next_page = url_for('index')
-        return redirect(next_page)
-    return render_template('login.html', title='Sign In', form=form)
     
 @app.route('/logout')
 def logout():
@@ -104,7 +81,7 @@ def register():
         db.session.commit()
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
-    return render_template('register.html', title='Register', form=form)
+    return render_template('auth/register.html', title='Register', form=form)
     
 # Display a user profile page.
 @app.route('/user/<username>')
@@ -199,7 +176,7 @@ def reset_password_request():
             send_password_reset_email(user)
         flash('Check your email for the instructions to reset your password')
         return redirect(url_for('login'))
-    return render_template('reset_password_request.html',
+    return render_template('auth/reset_password_request.html',
                            title='Reset Password', form=form)
                            
 # Password reset view function (linked from reset request email)
@@ -218,4 +195,4 @@ def reset_password(token):
         db.session.commit()
         flash('Your password has been reset.')
         return redirect(url_for('login'))
-    return render_template('reset_password.html', form=form)
+    return render_template('auth/reset_password.html', form=form)
