@@ -1,14 +1,19 @@
 Python Flask Website following https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world
 
+![Homepage screenshot](screenshot-homepage.png?raw-true "Homepage Screenshot")
+
 Uses:
     - Python 3
 	  - aiosmtpd
 	  - pyjwt
+	- JavaScript
+	  - Moment.js
     - Flask
 	  - Flask-SQLAlchemy
 	  - Flask-Migrate
 	  - Flask-Login
 	  - Flask-Mail
+	  - Flask-Moment
     - Jinja
     - WTForms
 	- SQLAlchemy
