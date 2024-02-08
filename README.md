@@ -1,25 +1,26 @@
-Python Flask Website following https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world
+**Python + Flask Website** following [Miguel Grinberg's tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
 
 ![Homepage screenshot](screenshot-homepage.png?raw-true "Homepage Screenshot")
 
-Uses:
-    - Python 3
-	  - aiosmtpd
-	  - pyjwt
-	- JavaScript
-	  - Moment.js
-    - Flask
-	  - Flask-SQLAlchemy
-	  - Flask-Migrate
-	  - Flask-Login
-	  - Flask-Mail
-	  - Flask-Moment
-    - Jinja
-    - WTForms
-	- SQLAlchemy
-	- Alembic
-	- Bootstrap
-	
+**Uses:**
+- Python 3
+  - aiosmtpd
+  - pyjwt
+- JavaScript
+  - Moment.js
+- Flask
+  - Flask-SQLAlchemy
+  - Flask-Migrate
+  - Flask-Login
+  - Flask-Mail
+  - Flask-Moment
+- Jinja
+- WTForms
+- SQLAlchemy
+- Alembic
+- Bootstrap
+
+**Notes:**
 - Use "flask run" to start the server on http://localhost:5000.
 - Use 'python tests.py' to run the unit tests.
 - Use "venv\scripts\activate" to activate virtual Python environment.
