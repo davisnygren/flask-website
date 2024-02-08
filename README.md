@@ -33,5 +33,6 @@
 		- set MAIL_SERVER=localhost
 		- set MAIL_PORT=8025
 - Application includes separate blueprints for these submodules:
-  - errors
-  - auth
+  - Error Handling (errors)
+  - Authentication (auth)
+  - Main Functionality (main)

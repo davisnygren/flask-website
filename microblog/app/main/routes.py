@@ -1,10 +1,10 @@
-# Contains the routes to general site pages
+# Contains the routes to general site pages for main functionality
 
 from flask import render_template, flash, redirect, request, url_for
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
 from app import app, db
-from app.forms import EditProfileForm, EmptyForm, PostForm
+from app.main.forms import EditProfileForm, EmptyForm, PostForm
 from app.models import User, Post
 from urllib.parse import urlsplit
 from datetime import datetime, timezone

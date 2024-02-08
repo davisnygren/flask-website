@@ -1,4 +1,4 @@
-# WTForms used by general templates. Blueprints contain their own forms.
+# WTForms used by main templates
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField
