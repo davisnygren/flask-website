@@ -18,6 +18,10 @@ login = LoginManager(app)
 login.login_view = 'login'
 mail = Mail(app)
 
+# Import flask blueprints for submodules
+from app.errors import bp as errors_bp
+app.register_blueprint(errors_bp)
+
 if not app.debug:
     # Email error notification setup
     if app.config['MAIL_SERVER']:
