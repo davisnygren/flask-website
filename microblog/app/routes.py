@@ -4,7 +4,6 @@ from flask import render_template, flash, redirect, request, url_for
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
 from app import app, db
-from app.email import send_password_reset_email
 from app.forms import EditProfileForm, EmptyForm, PostForm
 from app.models import User, Post
 from urllib.parse import urlsplit
