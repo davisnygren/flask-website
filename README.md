@@ -29,10 +29,14 @@
 	- pip install aiosmtpd
 	- (in second terminal)
 		- aiosmtpd -n -c aiosmtpd.handlers.Debugging -l localhost:8025
-	- (in original terminal) 
+	- (in original terminal)
 		- set MAIL_SERVER=localhost
 		- set MAIL_PORT=8025
 - Application includes separate blueprints for these submodules:
   - Error Handling (errors)
   - Authentication (auth)
   - Main Functionality (main)
+- For security, the ".env" file is not included in the repository and must be
+  created manually.
+- Virtual environment can be set up with "pip install -r requirements.txt"
+- Venv setup file can be updated with "pip freeze > requirements.txt"

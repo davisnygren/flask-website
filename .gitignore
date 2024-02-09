@@ -1,3 +1,4 @@
 microblog/venv/
 __pycache__/
 microblog/app.db
+.env
