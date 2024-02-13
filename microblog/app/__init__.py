@@ -1,5 +1,6 @@
 from flask import Flask
 from config import Config
+from elasticsearch import Elasticsearch
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
@@ -30,6 +31,8 @@ def create_app(config_class=Config):
     login.init_app(app)
     mail.init_app(app)
     moment.init_app(app)
+    app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \
+        if app.config['ELASTICSEARCH_URL'] else None
 
     # Import and register flask blueprints for submodules
     from app.auth import bp as auth_bp

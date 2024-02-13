@@ -19,6 +19,7 @@
 - SQLAlchemy
 - Alembic
 - Bootstrap
+- Elasticsearch (via Docker)
 
 **Notes:**
 - Use "flask run" to start the server on http://localhost:5000.
