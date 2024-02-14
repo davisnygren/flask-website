@@ -1,0 +1,4 @@
+.gradient-text{
+          background: linear-gradient(to bottom right, #00dcff, #0047c0);
+          background-clip: text;
+          color: #0000
