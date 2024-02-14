@@ -1,6 +1,16 @@
 **Python + Flask Website** following [Miguel Grinberg's tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
 
-![Homepage screenshot](screenshot-homepage.jpg?raw-true "Homepage Screenshot")
+**Index page:**
+
+![Homepage screenshot](screenshots/screenshot-homepage.jpg?raw-true "Homepage Screenshot")
+
+**Profile page:**
+
+![Profile page screenshot](screenshots/screenshot-profile.jpg?raw-true "Profile page Screenshot")
+
+**Search page:**
+
+![Search page screenshot](screenshots/screenshot-search.jpg?raw-true "Search page Screenshot")
 
 **Uses:**
 - Python 3
@@ -23,6 +33,7 @@
 
 **Notes:**
 - Use "flask run" to start the server on http://localhost:5000.
+  - Elasticsearch Docker container must be started to search or commit to the db.
 - Use 'python tests.py' to run the unit tests.
 - Use "venv\scripts\activate" to activate virtual Python environment.
 - Set "FLASK_DEBUG" variable to 1 before running to enable debugging mode.
