@@ -1,6 +1,6 @@
 **Python + Flask Website** following [Miguel Grinberg's tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
 
-![Homepage screenshot](screenshot-homepage.png?raw-true "Homepage Screenshot")
+![Homepage screenshot](screenshot-homepage.jpg?raw-true "Homepage Screenshot")
 
 **Uses:**
 - Python 3
