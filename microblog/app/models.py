@@ -83,6 +83,7 @@ class User(UserMixin, db.Model):
     last_seen: so.Mapped[Optional[datetime]] = so.mapped_column(
         default=lambda: datetime.now(timezone.utc))
     last_message_read_time: so.Mapped[Optional[datetime]]
+    password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
 
     posts: so.WriteOnlyMapped['Post'] = so.relationship(
         back_populates='author')

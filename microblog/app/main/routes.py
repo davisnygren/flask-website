@@ -6,8 +6,9 @@ from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
 from app import db
 from app.main import bp
-from app.main.forms import EditProfileForm, EmptyForm, PostForm, SearchForm
-from app.models import User, Post
+from app.main.forms import (EditProfileForm, EmptyForm, MessageForm, PostForm,
+    SearchForm)
+from app.models import Message, Post, User
 from urllib.parse import urlsplit
 from datetime import datetime, timezone
 
@@ -169,3 +170,18 @@ def search():
         if page > 1 else None
     return render_template('search.html', title='Search', posts=posts,
                            next_url=next_url, prev_url=prev_url)
+
+@bp.route('/send_message/<recipient>', methods=['GET', 'POST'])
+@login_required
+def send_message(recipient):
+    user = db.first_or_404(sa.select(User).where(User.username == recipient))
+    form = MessageForm()
+    if form.validate_on_submit():
+        msg = Message(author=current_user, recipient=user,
+                      body=form.message.data)
+        db.session.add(msg)
+        db.session.commit()
+        flash('Your message has been sent.')
+        return redirect(url_for('main.user', username=recipient))
+    return render_template('send_message.html', title='Send Message', form=form,
+                           recipient=recipient)
