@@ -42,7 +42,15 @@
           <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
           {% else %}
           <a class="nav-link" href="{{ url_for('main.user', username=current_user.username) }}">Profile</a>
-          <a class="nav-link" href="{{ url_for('main.messages') }}">Messages</a>
+          {% set unread_message_count = current_user.unread_message_count() %}
+          <a class="nav-link" href="{{ url_for('main.messages') }}">
+            <div class="d-inline-flex">
+              Messages
+              {% if unread_message_count %}
+              <span class="badge rounded-pill text-bg-danger ms-1">{{ unread_message_count }}</span>
+              {% endif %}
+            </div>
+          </a>
           <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
           {% endif %}
         </div>
