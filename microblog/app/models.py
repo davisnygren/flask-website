@@ -3,6 +3,7 @@ from time import time
 from typing import Optional
 import sqlalchemy as sa
 import sqlalchemy.orm as so
+import json
 import jwt
 from app import db, login
 from app.search import add_to_index, remove_from_index, query_index
@@ -85,6 +86,7 @@ class User(UserMixin, db.Model):
     last_message_read_time: so.Mapped[Optional[datetime]]
     password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
 
+    # SQLAlchemy ORM relationships
     posts: so.WriteOnlyMapped['Post'] = so.relationship(
         back_populates='author')
     following: so.WriteOnlyMapped['User'] = so.relationship(
@@ -99,6 +101,8 @@ class User(UserMixin, db.Model):
         foreign_keys='Message.sender_id', back_populates='author')
     messages_received: so.WriteOnlyMapped['Message'] = so.relationship(
         foreign_keys='Message.recipient_id', back_populates='recipient')
+    notifications: so.WriteOnlyMapped['Notification'] = so.relationship(
+        back_populates='user')
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -108,6 +112,15 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    # called, for example, when the user gets a new unread message
+    def add_notification(self, name, data):
+        # delete a notification with the same name before adding
+        db.session.execute(self.notifications.delete().where(
+            Notification.name == name))
+        n = Notification(name=name, payload_json=json.dumps(data), user=self)
+        db.session.add(n)
+        return n
 
     # return scaled avatar image url
     def avatar(self, size):
@@ -190,13 +203,13 @@ class Post(SearchableMixin, db.Model):
     def __repr__(self):
         return '<Post {}>'.format(self.body)
 
-# direct messages between users
+# direct message between users
 class Message(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     sender_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id),
                                                  index=True)
     recipient_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id),
-                                                     index=True)
+                                                    index=True)
     body: so.Mapped[str] = so.mapped_column(sa.String(140))
     timestamp: so.Mapped[datetime] = so.mapped_column(
         index=True, default=lambda: datetime.now(timezone.utc))
@@ -210,3 +223,17 @@ class Message(db.Model):
 
     def __repr__(self):
         return '<Message {}>'.format(self.body)
+
+# user notification
+class Notification(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    name: so.Mapped[str] = so.mapped_column(sa.String(128), index=True)
+    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id),
+                                               index=True)
+    timestamp: so.Mapped[float] = so.mapped_column(index=True, default=time)
+    payload_json: so.Mapped[str] = so.mapped_column(sa.Text)
+
+    user: so.Mapped[User] = so.relationship(back_populates='notifications')
+
+    def get_data(self):
+        return json.loads(str(self.payload_json))

@@ -42,13 +42,15 @@
           <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
           {% else %}
           <a class="nav-link" href="{{ url_for('main.user', username=current_user.username) }}">Profile</a>
-          {% set unread_message_count = current_user.unread_message_count() %}
           <a class="nav-link" href="{{ url_for('main.messages') }}">
             <div class="d-inline-flex">
               Messages
-              {% if unread_message_count %}
-              <span class="badge rounded-pill text-bg-danger ms-1">{{ unread_message_count }}</span>
-              {% endif %}
+              {% set unread_message_count = current_user.unread_message_count() %}
+              <span id="message_count" class="badge rounded-pill text-bg-danger ms-1"
+                    style="visibility: {% if unread_message_count %}visible
+                                       {% else %}hidden {% endif %};">
+                {{ unread_message_count }}
+              </span>
             </div>
           </a>
           <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
@@ -100,6 +102,29 @@
           });
         }
       }
+      
+      function set_message_count(n) {
+        const count = document.getElementById('message_count');
+        count.innerText = n;
+        count.style.visibility = n ? 'visible' : 'hidden';
+      }
+      
+      {% if current_user.is_authenticated %}
+      function initialize_notifications() {
+      	let since = 0;
+      	setInterval(async function() {
+      	  const response = await fetch('{{ url_for('main.notifications') }}?since=' + since);
+      	  const notifications = await response.json();
+      	  for (let i = 0; i < notifications.length; i++) {
+            if (notifications[i].name == 'unread_message_count')
+              set_message_count(notifications[i].data);
+            since = notifications[i].timestamp;
+      	  }
+        }, 10000);
+      }
+      document.addEventListener('DOMContentLoaded', initialize_notifications);
+      {% endif %}
+      
       document.addEventListener('DOMContentLoaded', initialize_popovers);
     </script>
   </body>
