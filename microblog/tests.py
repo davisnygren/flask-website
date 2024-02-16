@@ -7,7 +7,7 @@ os.environ['DATABASE_URL'] = 'sqlite://'
 from datetime import datetime, timezone, timedelta
 import unittest
 from app import create_app, db
-from app.models import User, Post
+from app.models import User, Post, Notification
 from config import Config
 
 class TestConfig(Config):
@@ -103,6 +103,18 @@ class UserModelCase(unittest.TestCase):
         self.assertEqual(f2, [p2, p3])
         self.assertEqual(f3, [p3, p4])
         self.assertEqual(f4, [p4])
+    
+    def test_notification(self):
+        u1 = User(username='john', email='john@example.com')
+        db.session.add(u1)
         
+        u1.add_notification('unread_message_count', 0)
+        u1.add_notification('second_notification', 0)
+        
+        n1 = db.session.scalars(u1.notifications.select()).all()[0]
+        n2 = db.session.scalars(u1.notifications.select()).all()[1]
+        self.assertEqual(n1.name, 'unread_message_count')
+        self.assertEqual(n2.name, 'second_notification')
+    
 if __name__ == '__main__':
     unittest.main(verbosity=2)
