@@ -2,3 +2,8 @@ microblog/venv/
 __pycache__/
 microblog/app.db
 .env
+
+# eclipse files
+.project
+.pydevproject
+.settings
